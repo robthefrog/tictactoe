@@ -1,7 +1,12 @@
 package com.rgoddard.tictactoe;
 
-public class GameBoard {
+public class GameBoard implements IGameBoard{
     private final char[][] board = new char[3][3];
+    private IWinDetector winDetector;
+
+    public GameBoard(IWinDetector winDetector){
+        this.winDetector = winDetector;
+    }
 
     public void displayBoard() {
         for (char[] row : board) {
@@ -24,12 +29,12 @@ public class GameBoard {
         System.out.println("* is taken.");
     }
 
-    public void play(int player, int position) {
+    public boolean play(int player, int position) {
         char playerSymbol = player == 0 ? 'X' : 'O';
 
         if (position < 1 || position > 9) {
             System.out.println("Invalid Position!");
-            return;
+            return false;
         }
 
         int positionCount = 1;
@@ -38,16 +43,18 @@ public class GameBoard {
                 if (positionCount == position) {
                     if (board[x][y] != 0) {
                         System.out.println("Position already taken!");
+                        return false;
                     } else {
                         board[x][y] = playerSymbol;
                         displayBoard();
+                        return winDetector.detectWin(board);
                     }
-                    return;
                 } else {
                     positionCount++;
                 }
             }
         }
+        return false;
     }
 
     // Display 'X', 'O', or '-'(if default)
