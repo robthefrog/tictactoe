@@ -21,7 +21,7 @@ public class Main {
         GameRunner.RunGame(
                 new GameBoard(
                         winDetectionMode.toLowerCase().equals("magic") ?
-                                new MagicSquareWinDetector() : new ClassicWinDetector()
+                                new MagicSquareWinDetector() : new BruteForceWinDetector()
                 )
         );
     }

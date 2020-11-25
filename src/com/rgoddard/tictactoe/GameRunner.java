@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 public class GameRunner {
     public static void RunGame(IGameBoard gameBoard) {
         boolean gameOver = false;
-        boolean win = false;
         int player = 0;
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -29,10 +28,11 @@ public class GameRunner {
 
                 if (userInput.toLowerCase().equals("s")) {
                     gameBoard.displayValidPositions();
+                    continue;
                 } else {
                     try {
                         int position = Integer.parseInt(userInput);
-                        if (!gameBoard.play(player, position)){
+                        if (!gameBoard.play(player, position)) {
                             continue;
                         }
                         gameOver = gameBoard.isGameOver() || gameBoard.isWin();
@@ -46,7 +46,9 @@ public class GameRunner {
                 System.exit(1);
             }
 
-            player = player == 0 ? 1 : 0;
+            if (!gameOver) {
+                player = player == 0 ? 1 : 0;
+            }
         }
 
         if (gameBoard.isWin()) {
