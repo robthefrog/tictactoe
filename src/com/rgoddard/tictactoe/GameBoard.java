@@ -1,13 +1,14 @@
 package com.rgoddard.tictactoe;
 
-public class GameBoard implements IGameBoard{
+public class GameBoard implements IGameBoard {
     private final char[][] board = new char[3][3];
-    private IWinDetector winDetector;
+    private final IWinDetector winDetector;
 
-    public GameBoard(IWinDetector winDetector){
+    public GameBoard(IWinDetector winDetector) {
         this.winDetector = winDetector;
     }
 
+    @Override
     public void displayBoard() {
         for (char[] row : board) {
             System.out.println(
@@ -18,17 +19,22 @@ public class GameBoard implements IGameBoard{
         }
     }
 
+    @Override
     public void displayValidPositions() {
         int positionCount = 1;
         for (char[] row : board) {
-            System.out.print((row[0] != 0 ? "*" : positionCount++) + " ");
-            System.out.print((row[1] != 0 ? "*" : positionCount++) + " ");
-            System.out.print((row[2] != 0 ? "*" : positionCount++) + " ");
+            System.out.print((row[0] != 0 ? "*" : positionCount) + " ");
+            positionCount++;
+            System.out.print((row[1] != 0 ? "*" : positionCount) + " ");
+            positionCount++;
+            System.out.print((row[2] != 0 ? "*" : positionCount) + " ");
+            positionCount++;
             System.out.println();
         }
         System.out.println("* is taken.");
     }
 
+    @Override
     public boolean play(int player, int position) {
         char playerSymbol = player == 0 ? 'X' : 'O';
 
@@ -46,8 +52,7 @@ public class GameBoard implements IGameBoard{
                         return false;
                     } else {
                         board[x][y] = playerSymbol;
-                        displayBoard();
-                        return winDetector.detectWin(board);
+                        return true;
                     }
                 } else {
                     positionCount++;
@@ -55,6 +60,24 @@ public class GameBoard implements IGameBoard{
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean isGameOver() {
+        int count = 0;
+
+        for (char[] row : board) {
+            for (char symbol : row) {
+                count += symbol == 0 ? 0 : 1;
+            }
+        }
+
+        return count == 9;
+    }
+
+    @Override
+    public boolean isWin() {
+        return winDetector.detectWin(board);
     }
 
     // Display 'X', 'O', or '-'(if default)
